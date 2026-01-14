@@ -49,7 +49,7 @@ export const searchUsers = async(req, res) => {
         })
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: "Error fetching status", error: error.message})
+        res.status(500).json({ message: "Error searching users", error: error.message})
     }
 };
 
@@ -78,7 +78,7 @@ export const getAllUsers = async(req, res)=> {
 
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: "Error fetching status", error: error.message})
+        res.status(500).json({ message: "Error getting all users", error: error.message})
     }
 }
 
@@ -93,7 +93,7 @@ export const getUserById = async(req, res)=> {
 
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: "Error fetching status", error: error.message})
+        res.status(500).json({ message: "Error finding user", error: error.message})
     }
 };
 
@@ -125,6 +125,53 @@ export const createUser = async(req, res)=> {
 
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: "Error fetching status", error: error.message})
+        res.status(500).json({ message: "Error creating user", error: error.message})
+    }
+}
+
+//Update user
+export const updateUser = async(req, res)=> {
+    try {
+        const { name, email, phone, status} = req.body;
+
+        if(email) {
+            const exists = await User.find({ email, _id: {$ne: req.params.id}})
+
+            if(exists.length > 0) {
+                return res.status(400).json({ message: "Email already exists"})
+            }
+        }
+
+        const user = await User.findByIdAndUpdate(
+            req.params.id, 
+            {name, email, phone, status}, 
+            {new: true, runValidators: true} 
+        );
+
+        if(!user) 
+            return res.status(404).json({ message: "User not found"});
+
+        res.json(user)
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Error updating user", error: error.message})
+    }
+};
+
+//Delete user
+export const deleteUser = async(req, res)=> {
+    try {
+        
+        const user = await User.findByIdAndDelete(req.params.id);
+
+        if(!user) return res.status(404).json({ message: "User not found"})
+
+        res.json({success: true, message: "User deleted successfully"});
+
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Error deleting user", error: error.message})
     }
 }
