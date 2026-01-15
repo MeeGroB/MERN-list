@@ -1,4 +1,4 @@
-const API_URL = "http:localhost:5000/api/v1/users";
+const API_URL = "http://localhost:5000/api/v1/users";
 
 interface User {
     [key: string]: unknown;
@@ -31,7 +31,6 @@ export const searchUsers= async(term="", page=1, limit=5)=> {
 
 //Get status
 export const getStats = async()=> {
-
 
     const res = await fetch(`${API_URL}/stats`);
 

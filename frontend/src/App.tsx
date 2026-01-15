@@ -58,12 +58,13 @@ function App() {
 
   //fetch stats
   const fetchStats = async()=> {
+    
     const data = await getStats();
-    console.log(data)
     setStats(data);
   };
 
   const fetchUsers = async()=> {
+
     const data = await getUsers(currentPage, itemsPerPage);
 
     setUsers(data.users);
