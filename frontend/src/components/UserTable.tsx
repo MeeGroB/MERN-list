@@ -1,6 +1,25 @@
 import { ChevronLeft, ChevronRight, Edit, Trash } from "lucide-react"
 
-const UserTable = () => {
+interface User {
+    _id: string,
+    name: string,
+    email: string,
+    phone: string,
+    status: string
+    createdAt: string
+}
+
+
+interface UserTableProps {
+    users: User[],
+    onEdit: (user: User) => void,
+    onDelete: (item: string) => void,
+    currentPage: number,
+    totalPages: number,
+    onPageChange: (page: number) => void
+}
+
+const UserTable = ({ users, onEdit, onDelete, currentPage, totalPages, onPageChange }: UserTableProps) => {
     return (
         <div className="bg-gray-900 rounded-lg overflow-hidden border border-gray-800">
             <div className="overflow-x-auto">
@@ -22,60 +41,84 @@ const UserTable = () => {
                     </thead>
 
                     <tbody className="divide-y divide-gray-800">
-                        <tr className="hover:bg-gray-800 transition-colors">
-                            <td className="px-6 py-4 text-sm text-white font-medium">User name</td>
+                        {users.map((user, index) => (
+                            <tr className="hover:bg-gray-800 transition-colors" key={index}>
+                                <td className="px-6 py-4 text-sm text-white font-medium">{user.name}</td>
 
-                            <td className="px-6 py-4 text-sm text-white font-medium">User Email</td>
+                                <td className="px-6 py-4 text-sm text-white font-medium">{user.email}</td>
 
-                            <td className="px-6 py-4 text-sm text-white font-medium">User Phone</td>
+                                <td className="px-6 py-4 text-sm text-white font-medium">{user.phone}</td>
 
-                            <td className={`px-3 py-1 rounded-full text-xs font-semibold`}>Active</td>
+                                <td className="px-6 py-4 text-sm font-semibold">
+                                    <span className={`px-3 py-1 rounded-full text-xs font-semibold ${user.status === "Active" ? "bg-green-500 text-gray-900" : "bg-red-500 text-white"}`}>{user.status}</span>
 
-                            <td className="px-6 py-4 text-sm text-gray-400 font-medium">Date</td>
+                                </td>
 
-                            <td className="px-6 py-4 text-center">
-                                <div  className="flex justify-center gap-2">
-                                    <button className="flex items-center gap-1 px-3 py-1.5 text-sm bg-green-500 text-gray-900 rounded-lg hover:bg-green-400 transition-all font-semibold">
-                                        <Edit size={16} /> Edit
-                                    </button>
+                                <td className="px-6 py-4 text-sm text-gray-400 font-medium">
+                                    {new Date(user.createdAt).toLocaleDateString()}
+                                </td>
 
-                                    <button className="flex items-center gap-1 px-3 py-1.5 text-sm bg-red-500 text-gray-900 rounded-lg hover:bg-red-400 transition-all font-semibold">
-                                        <Trash size={16} /> Delete
-                                    </button>
-                                </div>
+                                <td className="px-6 py-4 text-center">
+                                    <div className="flex justify-center gap-2">
+                                        <button className="flex items-center gap-1 px-3 py-1.5 text-sm bg-green-500 text-gray-900 rounded-lg hover:bg-green-400 transition-all font-semibold" onClick={() => onEdit(user)}>
+                                            <Edit size={16} /> Edit
+                                        </button>
 
-                            </td>
-                        </tr>
+                                        <button className="flex items-center gap-1 px-3 py-1.5 text-sm bg-red-500 text-gray-900 rounded-lg hover:bg-red-400 transition-all font-semibold" onClick={() => onDelete(user._id)}>
+                                            <Trash size={16} /> Delete
+                                        </button>
+                                    </div>
+
+                                </td>
+                            </tr>
+                        ))}
 
                         {/* Conditional Rendering */}
-                        <tr>
-                            <td colSpan={6} className="text-center py-12 text-gray-400">No users found</td>
-                        </tr>
+                        {users.length === 0 && (
+                            <tr>
+                                <td colSpan={6} className="text-center py-12 text-gray-400">No users found</td>
+                            </tr>
+                        )}
                     </tbody>
                 </table>
             </div>
 
             {/* Pagination */}
             {/* Conditional Rendering */}
-            <div className="px-6 py-4 border-t border-gray-800 flex justify-between items-center bg-gray-800">
-                <div className="text-sm text-gray-400">
-                    Page 1 of 5
+            {users.length > 0 && (
+                <div className="px-6 py-4 border-t border-gray-800 flex justify-between items-center bg-gray-800">
+                    <div className="text-sm text-gray-400">
+                        Page {currentPage} of {totalPages}
+                    </div>
+
+                    <div className="flex gap-2">
+                        <button className="flex items-center gap-1 px-3 py-2 bg-gray-700 border border-gray-600 text-gray-300 rounded-lg hover:bg-gray-600 disabled:opacity-50" onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 1}>
+                            <ChevronLeft size={16} /> Prev
+                        </button>
+
+                        {[...Array(totalPages)].map((_, i) => {
+                            const p = i + 1;
+                            if (p === 1 || p === totalPages || (p >= currentPage - 1 && p <= currentPage + 1)) {
+                                return (
+                                    <button key={i} className={`px-3 py-2 rounded-lg ${currentPage === p ? "bg-green-500 text-gray-900" : "bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600"}`} onClick={()=> onPageChange(p)}>
+                                        {p}
+                                    </button>
+                                )
+                            } else if(p === currentPage -2 || p ===currentPage +2) {
+                                return (
+                                    <span key={i} className="px-2 py-2 text-gray-500">...</span>
+                                )
+                            }
+
+                            return null;
+                        })}
+
+                        <button className="flex items-center gap-1 px-3 py-2 bg-gray-700 border border-gray-600 text-gray-300 rounded-lg hover:bg-gray-600 disabled:opacity-50" onClick={() => onPageChange(currentPage + 1)} disabled={currentPage === totalPages}>
+                            Next <ChevronRight size={16} />
+                        </button>
+                    </div>
                 </div>
-
-                <div className="flex gap-2">
-                    <button className="flex items-center gap-1 px-3 py-2 bg-gray-700 border border-gray-600 text-gray-300 rounded-lg hover:bg-gray-600 disabled:opacity-50">
-                        <ChevronLeft size={16} /> Prev
-                    </button>
-
-                    <button className={`px-3 py-2 rounded-lg`}>
-                        1
-                    </button>
-
-                    <button className="flex items-center gap-1 px-3 py-2 bg-gray-700 border border-gray-600 text-gray-300 rounded-lg hover:bg-gray-600 disabled:opacity-50">
-                        Next <ChevronRight size={16} />
-                    </button>
-                </div>
-            </div>
+            )}
         </div>
     )
 }

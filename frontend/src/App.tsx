@@ -29,6 +29,7 @@ function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
+    _id: "",
     name: "",
     email: "",
     phone: "",
@@ -110,13 +111,13 @@ function App() {
     }
   };
 
-  const openModal = (item= null)=> {
+  const openModal = (item?: User)=> {
     if(item) {
       setEditingItem(item);
       setFormData(item);
     } else {
       setEditingItem(null);
-      setFormData({ name: "", email: "", phone: "", status: "Active"});
+      setFormData({ _id: "", name: "", email: "", phone: "", status: "Active"});
     }
 
     setIsModalOpen(true);
@@ -125,7 +126,7 @@ function App() {
   const closeModal = ()=> {
     setIsModalOpen(false);
     setEditingItem(null);
-    setFormData({ name: "", email: "", phone: "", status: "Active"});
+    setFormData({ _id: "", name: "", email: "", phone: "", status: "Active"});
   }
 
   return (
@@ -146,7 +147,7 @@ function App() {
             </div>
           </div>
 
-          <button className="flex items-center gap-2 bg-green-500 text-gray-900 px-5 py-2.5 rounded-lg hover:bg-green-600 transition-colors duration-300 cursor-pointer shadow-lg font-semibold" onClick={()=> openModal()}>
+          <button className="flex items-center gap-2 bg-green-500 text-gray-900 px-5 py-2.5 rounded-lg hover:bg-green-600 transition-colors duration-300 cursor-pointer shadow-lg font-semibold" onClick={()=> openModal(undefined)}>
             <Plus size={20} />
             Add User
           </button>
@@ -207,9 +208,24 @@ function App() {
         />
 
         {/* User Table */}
-        <UserTable />
+        <UserTable 
+          users={users}
+          onEdit={openModal}
+          onDelete={handleDelete}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
 
-        <UserModel isOpen={isModalOpen} onClose={closeModal} />
+        <UserModel 
+          isOpen={isModalOpen} 
+          onClose={closeModal} 
+          formData={formData}
+          setFormData={setFormData}
+          onSubmit={handleSubmit}
+          loading={loading}
+          status={status}
+        />
         
       </main>
 
