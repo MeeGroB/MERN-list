@@ -41,8 +41,8 @@ const UserTable = ({ users, onEdit, onDelete, currentPage, totalPages, onPageCha
                     </thead>
 
                     <tbody className="divide-y divide-gray-800">
-                        {users.map((user, index) => (
-                            <tr className="hover:bg-gray-800 transition-colors" key={index}>
+                        {users.map((user) => (
+                            <tr className="hover:bg-gray-800 transition-colors" key={user._id}>
                                 <td className="px-6 py-4 text-sm text-white font-medium">{user.name}</td>
 
                                 <td className="px-6 py-4 text-sm text-white font-medium">{user.email}</td>

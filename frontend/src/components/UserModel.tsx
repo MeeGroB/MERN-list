@@ -11,17 +11,17 @@ interface FormData {
 
 interface UserModelProps {
     isOpen: boolean,
-    onClose: ()=> void
-    formData : FormData,
-    setFormData: (data: FormData)=> void,
-    onSubmit: any,
+    onClose: () => void
+    formData: FormData,
+    setFormData: (data: FormData) => void,
+    onSubmit: ()=> void,
     loading: boolean,
     status: string[]
 }
 
-const UserModel = ({isOpen, onClose, formData, setFormData, onSubmit, loading, status}: UserModelProps) => {
+const UserModel = ({ isOpen, onClose, formData, setFormData, onSubmit, loading, status }: UserModelProps) => {
 
-    if(!isOpen) return null
+    if (!isOpen) return null
 
     return (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
@@ -35,35 +35,35 @@ const UserModel = ({isOpen, onClose, formData, setFormData, onSubmit, loading, s
                     </button>
                 </div>
 
-                <div className="p-6">
+                <form className="p-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label className="block text-gray-300 font-medium mb-2">
                                 Name *
                             </label>
-                            <input type="text" placeholder="Jhon Doe" className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-green-500 outline-none" value={formData.name} onChange={(e)=> setFormData({...formData, name: e.target.value})}/>
-                        </div>
+                            <input type="text" placeholder="John Doe" className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-green-500 outline-none" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />                        </div>
 
                         <div>
                             <label className="block text-gray-300 font-medium mb-2">
                                 Email *
                             </label>
-                            <input type="email" placeholder="jhondoe@gmail.com" className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-green-500 outline-none" value={formData.email} onChange={(e)=> setFormData({...formData, email: e.target.value})} />
+                            <input type="email" placeholder="johndoe@gmail.com" className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-green-500 outline-none" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
                         </div>
 
                         <div>
                             <label className="block text-gray-300 font-medium mb-2">
                                 Phone *
                             </label>
-                            <input type="tel" placeholder="+12345678" className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-green-500 outline-none" value={formData.phone} onChange={(e)=> setFormData({...formData, phone: e.target.value})} />
+                            <input type="tel" placeholder="+12345678" className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-green-500 outline-none" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
                         </div>
 
                         <div>
                             <label className="block text-gray-300 font-medium mb-2">
                                 Status *
                             </label>
-                            <select className="w-full px-4 py-2.5 bg-gray-800 border-gray-700 text-white rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none" value={formData.status} onChange={(e)=> setFormData({...formData, status: e.target.value})}>
-                                {status.map((stat)=> (
+                            <select className="w-full px-4 py-2.5 bg-gray-800 border-gray-700 text-white rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none" value={formData.status} onChange={(e) => setFormData({ ...formData, status: e.target.value })}>
+                                <option value="" disabled>Select status</option>
+                                {status.map((stat) => (
                                     <option value={stat} key={stat}>{stat}</option>
                                 ))}
                             </select>
@@ -76,11 +76,11 @@ const UserModel = ({isOpen, onClose, formData, setFormData, onSubmit, loading, s
                         </button>
 
                         <button className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 border-gray-700 bg-green-500 text-gray-900 rounded-lg hover:bg-green-400 transition-all" onClick={onSubmit} disabled={loading}>
-                            <Check size={20} /> 
+                            <Check size={20} />
                             {loading ? "Saving..." : formData._id ? "Update User" : "Add User"}
                         </button>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     )
